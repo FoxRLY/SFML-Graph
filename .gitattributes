@@ -1,0 +1,7 @@
+* text=true
+*.jpg binary
+*.cpp text
+*.c text
+*.h text
+*.hpp text
+*.ttf binary
