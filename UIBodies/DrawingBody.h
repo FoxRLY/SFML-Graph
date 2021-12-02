@@ -1,12 +1,12 @@
 #pragma once
 #include "../UIElement.h"
-#include <queue>
+#include <vector>
 
 
 class DrawingBody : public UIElementBody
 {
 private:
-    std::queue<Drawable*> draw_queue;
+    std::vector<Drawable*> draw_queue;
     FloatRect shape;
 public:
     void drawHorLine(Color line_color, float y, float thickness);
@@ -16,6 +16,7 @@ public:
     void drawRect(Color rect_fill_color, Color rect_outline_color, Vector2f pos, Vector2f size, float outline_thickness);
     void setBoardSize(Vector2f new_size);
     void setBoardPos(Vector2f new_pos);
+    void clearDrawings();
 
     bool mouseHover(Vector2f mouse_pos) override;
     FloatRect getGlobalBounds() override;

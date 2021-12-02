@@ -9,7 +9,7 @@ void DrawingBody::drawHorLine(Color line_color, float y, float thickness = 2)
     line->setPosition(shape.left, shape.top+y);
     line->setFillColor(line_color);
     line->setSize(Vector2f(shape.width, thickness));
-    draw_queue.push((Drawable*)line);
+    draw_queue.push_back((Drawable*)line);
 }
 
 void DrawingBody::drawLine(Color line_color, Vector2f start, Vector2f end, float thickness = 2)
@@ -23,7 +23,7 @@ void DrawingBody::drawLine(Color line_color, Vector2f start, Vector2f end, float
     line->setSize(Vector2f(sqrtf(delta_y*delta_y + delta_x*delta_x), thickness));
     line->setRotation(atanf(delta_y/delta_x)*radian);
     line->setFillColor(line_color);
-    draw_queue.push((Drawable*)line);
+    draw_queue.push_back((Drawable*)line);
 }
 
 void DrawingBody::drawVertLine(Color line_color, float x, float thickness = 2)
@@ -34,7 +34,7 @@ void DrawingBody::drawVertLine(Color line_color, float x, float thickness = 2)
     line->setFillColor(line_color);
     line->setSize(Vector2f(shape.width, thickness));
     line->setRotation(90);
-    draw_queue.push((Drawable*)line);
+    draw_queue.push_back((Drawable*)line);
 }
 
 void DrawingBody::drawPoint(Color point_color, Vector2f pos, float radius = 2)
@@ -44,7 +44,7 @@ void DrawingBody::drawPoint(Color point_color, Vector2f pos, float radius = 2)
     point->setOrigin(radius, radius);
     point->setFillColor(point_color);
     point->setPosition(shape.left+pos.x, shape.top+pos.y);
-    draw_queue.push((Drawable*)point);
+    draw_queue.push_back((Drawable*)point);
 }
 
 void DrawingBody::drawRect(Color rect_fill_color, Color rect_outline_color, Vector2f pos, Vector2f size,
@@ -56,7 +56,7 @@ void DrawingBody::drawRect(Color rect_fill_color, Color rect_outline_color, Vect
     rect->setOutlineThickness(outline_thickness);
     rect->setPosition(shape.left+pos.x, shape.top+pos.y);
     rect->setSize(size);
-    draw_queue.push((Drawable*)rect);
+    draw_queue.push_back((Drawable*)rect);
 }
 
 void DrawingBody::setBoardPos(Vector2f new_pos)
@@ -73,11 +73,18 @@ void DrawingBody::setBoardSize(Vector2f new_size)
 
 void DrawingBody::draw(RenderWindow* window)
 {
+    for(auto object : draw_queue)
+    {
+        window->draw(*object);
+    }
+}
+
+void DrawingBody::clearDrawings()
+{
     while(!draw_queue.empty())
     {
-        window->draw(*(draw_queue.front()));
         delete draw_queue.front();
-        draw_queue.pop();
+        draw_queue.pop_back();
     }
 }
 
