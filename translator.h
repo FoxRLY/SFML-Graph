@@ -1,9 +1,6 @@
 #pragma once
-#include <cmath>
 #include <stack>
-#include <cctype>
 #include <map>
-#include <algorithm>
 #include <string>
 
 class Calculator
