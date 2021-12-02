@@ -81,11 +81,11 @@ void DrawingBody::draw(RenderWindow* window)
 
 void DrawingBody::clearDrawings()
 {
-    while(!draw_queue.empty())
+    for(auto object : draw_queue)
     {
-        delete draw_queue.front();
-        draw_queue.pop_back();
+        delete object;
     }
+    draw_queue.clear();
 }
 
 bool DrawingBody::mouseHover(Vector2f mouse_pos)

@@ -223,11 +223,10 @@ int main()
 
         if(draw_button->checkResult())
         {
+            drawing_box_body->clearDrawings();
             drawing_box_body->drawRect(Color::White, Color::Black, Vector2f(0,0), Vector2f(880,880), 5);
-            drawing_box_body->drawLine(Color::Red, Vector2f(0,0), Vector2f(440,440), 2);
-            drawing_box->draw();
         }
-
+        drawing_box->draw();
 
         window.draw(input_text_1);
         window.draw(input_text_2);
