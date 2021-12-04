@@ -7,23 +7,6 @@
 
 using namespace sf;
 
-void uiEventLoop(std::vector<UIElement*>& event_list)
-{
-    for(auto element : event_list)
-    {
-        element->eventCheck();
-    }
-}
-
-void RectShapeBodyPreset(RectShapeBody* button_body)
-{
-    button_body->setOutline(5);
-    button_body->setRestingColor(Color(192,192,192,255));
-    button_body->setHoverColor(Color(0,204,102,255));
-    button_body->setClickColor(Color(170,210,255,255));
-    button_body->setDisabledColor(Color(120,120,120,255));
-}
-
 void TextPreset(Text& text, Font& font)
 {
     text.setFont(font);
@@ -49,7 +32,7 @@ bool inputChar(UIElement* input_box, Text& input_text, char input_char)
 int main()
 {
     // Окно приложения
-    RenderWindow window(VideoMode( 1920, 1080 ), L"Рисование графиков");
+    RenderWindow window(VideoMode( 1640, 1080 ), L"Рисование графиков");
     window.setVerticalSyncEnabled(true);
 
 

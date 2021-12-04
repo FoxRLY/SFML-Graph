@@ -124,3 +124,5 @@ public:
         delete event;
     }
 };
+
+void uiEventLoop(std::vector<UIElement*>& event_list);

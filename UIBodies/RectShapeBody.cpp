@@ -108,3 +108,12 @@ void RectShapeBody::draw(RenderWindow *window)
 {
     window->draw(shape);
 }
+
+void RectShapeBodyPreset(RectShapeBody* button_body)
+{
+    button_body->setOutline(5);
+    button_body->setRestingColor(Color(192,192,192,255));
+    button_body->setHoverColor(Color(0,204,102,255));
+    button_body->setClickColor(Color(170,210,255,255));
+    button_body->setDisabledColor(Color(120,120,120,255));
+}

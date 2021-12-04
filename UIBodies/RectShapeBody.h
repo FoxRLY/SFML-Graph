@@ -36,4 +36,6 @@ public:
     void draw(RenderWindow* window) override;
 };
 
+void RectShapeBodyPreset(RectShapeBody* button_body);
+
 

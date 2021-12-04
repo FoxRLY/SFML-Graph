@@ -17,3 +17,11 @@ bool UIEvent::isMouseKeyPressed(Mouse::Button button)
 {
     return Mouse::isButtonPressed(button);
 }
+
+void uiEventLoop(std::vector<UIElement*>& event_list)
+{
+    for(auto element : event_list)
+    {
+        element->eventCheck();
+    }
+}
