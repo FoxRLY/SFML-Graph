@@ -27,7 +27,15 @@ UIElement* UIFabric::createRectShapeInputTextBox(RenderWindow *window)
 UIElement* UIFabric::createDrawingBox(RenderWindow *window)
 {
     auto* body = new DrawingBody;
-    auto* event = new GraphNavEvent;
+    auto* event = new DefaultEvent;
     auto* drawing_box = new UIElement(body, event, window);
     return drawing_box;
+}
+
+UIElement* UIFabric::createCameraBox(RenderWindow *window)
+{
+    auto* body = new CameraBody;
+    auto* event = new GraphNavEvent;
+    auto camera_box = new UIElement(body, event, window);
+    return camera_box;
 }
