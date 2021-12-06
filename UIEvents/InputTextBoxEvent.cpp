@@ -74,3 +74,17 @@ bool InputTextBoxEvent::check(UIElementBody *body, RenderWindow *window)
     }
     return check_result;
 }
+
+bool InputTextBoxEvent::inputChar(UIElement* input_box, Text& input_text, char input_char)
+{
+    if(input_box->checkResult())
+    {
+        InputTextBoxEvent::addChar(input_char, input_text);
+        if(input_text.getGlobalBounds().width > input_box->getBody()->getGlobalBounds().width)
+        {
+            InputTextBoxEvent::addChar(8, input_text);
+        }
+        return true;
+    }
+    return false;
+}

@@ -15,20 +15,6 @@ void TextPreset(Text& text, Font& font)
     text.setCharacterSize(40);
 }
 
-bool inputChar(UIElement* input_box, Text& input_text, char input_char)
-{
-    if(input_box->checkResult())
-    {
-        InputTextBoxEvent::addChar(input_char, input_text);
-        if(input_text.getGlobalBounds().width > input_box->getBody()->getGlobalBounds().width)
-        {
-            InputTextBoxEvent::addChar(8, input_text);
-        }
-        return true;
-    }
-    return false;
-}
-
 int main()
 {
     // Окно приложения
@@ -183,9 +169,9 @@ int main()
                     if(event.text.unicode < 128)
                     {
                         char input_char = static_cast<char>(event.text.unicode);
-                        if(inputChar(input_box_1, input_text_1, input_char) ||
-                           inputChar(input_box_2, input_text_2, input_char) ||
-                           inputChar(input_box_3, input_text_3, input_char))
+                        if(InputTextBoxEvent::inputChar(input_box_1, input_text_1, input_char) ||
+                           InputTextBoxEvent::inputChar(input_box_2, input_text_2, input_char) ||
+                           InputTextBoxEvent::inputChar(input_box_3, input_text_3, input_char))
                         {
                             break;
                         }

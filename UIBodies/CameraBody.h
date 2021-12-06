@@ -13,6 +13,7 @@ public:
     void setDisplayRect(RectangleShape& new_shape, RenderWindow* window);
     void setCameraPos(Vector2f pos);
     View getView();
+    void setView(RenderWindow* window);
 
     bool mouseHover(Vector2f mouse_pos) override;
     FloatRect getGlobalBounds() override;

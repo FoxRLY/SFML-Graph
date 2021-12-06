@@ -1,5 +1,10 @@
 #include "CameraBody.h"
 
+void CameraBody::setView(RenderWindow* window)
+{
+    window->setView(view);
+}
+
 RectangleShape CameraBody::shapeToView(View &new_view, RenderWindow *window)
 {
     RectangleShape new_shape;
