@@ -1,5 +1,11 @@
 #include "InputTextBoxEvent.h"
 
+InputTextBoxEvent::InputTextBoxEvent(UIElementBody *new_body, RenderWindow *new_window)
+{
+    window = new_window;
+    body = new_body;
+}
+
 void InputTextBoxEvent::addChar(char c, Text& input_text)
 {
     std::string input_str = input_text.getString();
@@ -18,66 +24,67 @@ void InputTextBoxEvent::addChar(char c, Text& input_text)
     input_text.setString(input_str);
 }
 
-bool InputTextBoxEvent::check(UIElementBody *body, RenderWindow *window)
+bool RectShapeInputBoxEvent::check()
 {
+    auto* rect_body = (RectShapeBody*)body;
     if(!is_enabled)
     {
-        body->paintDisabled();
-        check_result = false;
-        return check_result;
+        rect_body->paintDisabled();
+        event_result = false;
+        return event_result;
     }
     if(isKeyPressed(Keyboard::Enter))
     {
-        check_result = false;
-        body->paintResting();
-        return check_result;
+        event_result = false;
+        rect_body->paintResting();
+        return event_result;
     }
     sf::Vector2i pixelPos = getMousePos(window);
     sf::Vector2f worldPos = window->mapPixelToCoords(pixelPos);
-    if(body->mouseHover(worldPos))
+    if(rect_body->mouseHover(worldPos))
     {
-        if(Mouse::isButtonPressed(Mouse::Left))
+        if(isMouseKeyPressed(Mouse::Left))
         {
-            if(!check_result)
+            if(!event_result)
             {
-                check_result = true;
-                body->paintHoverToggled();
+                event_result = true;
+                rect_body->paintHoverToggled();
             }
         }
         else
         {
-            if(check_result)
+            if(event_result)
             {
-                body->paintHoverToggled();
+                rect_body->paintHoverToggled();
             }
             else
             {
-                body->paintHover();
+                rect_body->paintHover();
             }
         }
     }
     else
     {
-        if(check_result)
+        if(event_result)
         {
-            body->paintToggled();
+            rect_body->paintToggled();
         }
         else
         {
-            body->paintResting();
+            rect_body->paintResting();
         }
-        if(Mouse::isButtonPressed(Mouse::Left))
+        if(isMouseKeyPressed(Mouse::Left))
         {
-            check_result = false;
-            body->paintResting();
+            event_result = false;
+            rect_body->paintResting();
         }
     }
-    return check_result;
+    return event_result;
 }
 
 bool InputTextBoxEvent::inputChar(UIElement* input_box, Text& input_text, char input_char)
 {
-    if(input_box->checkResult())
+    if(input_box->getEventResult())
     {
         InputTextBoxEvent::addChar(input_char, input_text);
         if(input_text.getGlobalBounds().width > input_box->getBody()->getGlobalBounds().width)

@@ -1,11 +1,22 @@
 #include "CameraBody.h"
 
-void CameraBody::setView(RenderWindow* window)
+
+CameraBody::CameraBody(RenderWindow *new_window) : UIElementBody(new_window)
+{
+}
+
+void CameraBody::applyView()
 {
     window->setView(view);
 }
 
-RectangleShape CameraBody::shapeToView(View &new_view, RenderWindow *window)
+void CameraBody::resetView()
+{
+
+    window->setView(window->getDefaultView());
+}
+
+RectangleShape CameraBody::shapeToView(View &new_view)
 {
     RectangleShape new_shape;
     Vector2f size(new_view.getViewport().width*(float)window->getSize().x,
@@ -16,7 +27,7 @@ RectangleShape CameraBody::shapeToView(View &new_view, RenderWindow *window)
     new_shape.setPosition(pos);
     return new_shape;
 }
-View CameraBody::viewToShape(RectangleShape& new_shape, RenderWindow* window)
+View CameraBody::viewToShape(RectangleShape& new_shape)
 {
     View new_view;
     FloatRect rect;
@@ -32,11 +43,17 @@ Vector2f CameraBody::rectPosToViewPos(Vector2f pos)
     return Vector2f(pos.x + shape.getSize().x/2.0,
                     pos.y + shape.getSize().y/2.0);
 }
-
-void CameraBody::setDisplayRect(RectangleShape& new_shape, RenderWindow* window)
+Vector2f CameraBody::viewPosToRectPos(Vector2f pos)
 {
-    shape = new_shape;
-    view = viewToShape(new_shape, window);
+    return Vector2f(pos.x - shape.getSize().x/2.0,
+                    pos.y - shape.getSize().y/2.0);
+}
+
+void CameraBody::setDisplayRect(Vector2f pos, Vector2f size)
+{
+    shape.setPosition(pos);
+    shape.setSize(size);
+    view = viewToShape(shape);
 }
 
 View CameraBody::getView()
@@ -47,6 +64,16 @@ View CameraBody::getView()
 void CameraBody::setCameraPos(Vector2f pos)
 {
     view.setCenter(rectPosToViewPos(pos));
+}
+
+void CameraBody::setCameraCenter(Vector2f pos)
+{
+    view.setCenter(pos);
+}
+
+Vector2f CameraBody::getCameraPos()
+{
+    return viewPosToRectPos(view.getCenter());
 }
 
 bool CameraBody::mouseHover(Vector2f mouse_pos)
@@ -63,7 +90,8 @@ FloatRect CameraBody::getLocalBounds()
 }
 void CameraBody::transform(Vector2f pos, Vector2f size)
 {
+    setDisplayRect(pos, size);
 }
-void CameraBody::draw(RenderWindow* window)
+void CameraBody::draw()
 {
 }

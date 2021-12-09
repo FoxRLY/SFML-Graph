@@ -2,6 +2,11 @@
 #include <iostream>
 #include <cmath>
 
+
+DrawingBody::DrawingBody(RenderWindow *new_window): UIElementBody(new_window)
+{
+}
+
 void DrawingBody::drawHorLine(Color line_color, float y, float thickness = 2)
 {
     auto* line = new RectangleShape;
@@ -59,6 +64,13 @@ void DrawingBody::drawRect(Color rect_fill_color, Color rect_outline_color, Vect
     draw_queue.push_back((Drawable*)rect);
 }
 
+void DrawingBody::drawText(Text& text, Vector2f pos)
+{
+    auto* new_text = new Text(text);
+    new_text->setPosition(pos);
+    draw_queue.push_back((Drawable*)new_text);
+}
+
 void DrawingBody::setBoardPos(Vector2f new_pos)
 {
     shape.left = new_pos.x;
@@ -71,7 +83,7 @@ void DrawingBody::setBoardSize(Vector2f new_size)
     shape.height = new_size.y;
 }
 
-void DrawingBody::draw(RenderWindow* window)
+void DrawingBody::draw()
 {
     for(auto object : draw_queue)
     {
@@ -107,5 +119,10 @@ FloatRect DrawingBody::getGlobalBounds()
 FloatRect DrawingBody::getLocalBounds()
 {
     return FloatRect(0, 0, shape.width, shape.height);
+}
+
+DrawingBody::~DrawingBody()
+{
+    clearDrawings();
 }
 

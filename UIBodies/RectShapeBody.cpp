@@ -1,9 +1,10 @@
 #include "RectShapeBody.h"
 
-RectShapeBody::RectShapeBody()
+RectShapeBody::RectShapeBody(RenderWindow* new_window)
         : shape(Vector2f(0,0)), click_color(Color::Black),
           hover_color(Color::Black), resting_color(Color::Black),
-          disabled_color(Color::Black)
+          disabled_color(Color::Black),
+          UIElementBody(new_window)
 {
 }
 
@@ -104,7 +105,7 @@ void RectShapeBody::transform(Vector2f pos, Vector2f size)
     setSize(size);
 }
 
-void RectShapeBody::draw(RenderWindow *window)
+void RectShapeBody::draw()
 {
     window->draw(shape);
 }

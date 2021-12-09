@@ -1,5 +1,5 @@
 #pragma once
-#include "../UIElement.h"
+#include "../UIElements/UIElement.h"
 
 // Работает с ButtonEvent, CheckBoxEvent и InputTextBoxEvent
 
@@ -12,28 +12,29 @@ private:
     Color resting_color;
     Color disabled_color;
 public:
-    RectShapeBody();
+    explicit RectShapeBody(RenderWindow* new_window);
     void setClickColor(Color new_color);
     void setHoverColor(Color new_color);
     void setRestingColor(Color new_color);
     void setDisabledColor(Color new_color);
     void setSize(Vector2f new_size);
     void setShape(RectangleShape& new_shape);
+    RectangleShape& getShape();
     void setPos(Vector2f new_pos);
     void setOutline(float new_outline);
-    RectangleShape& getShape();
+    void paintDisabled();
+    void paintToggledDisabled();
+    void paintResting();
+    void paintToggled();
+    void paintHover();
+    void paintHoverToggled();
 
     bool mouseHover(Vector2f mouse_pos) override;
     FloatRect getGlobalBounds() override;
     FloatRect getLocalBounds() override;
     void transform(Vector2f pos, Vector2f size) override;
-    void paintDisabled() override;
-    void paintToggledDisabled() override;
-    void paintResting() override;
-    void paintToggled() override;
-    void paintHover() override;
-    void paintHoverToggled() override;
-    void draw(RenderWindow* window) override;
+
+    void draw() override;
 };
 
 void RectShapeBodyPreset(RectShapeBody* button_body);

@@ -1,6 +1,6 @@
 #include "DefaultEvent.h"
 
-bool DefaultEvent::check(UIElementBody *body, RenderWindow *window)
+bool DefaultEvent::check()
 {
-    return check_result;
+    return event_result;
 }

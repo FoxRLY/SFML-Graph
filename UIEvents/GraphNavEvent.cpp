@@ -5,40 +5,43 @@ Vector2f GraphNavEvent::getMouseDelta()
     return mouse_pos_delta;
 }
 
-bool GraphNavEvent::check(UIElementBody *body, RenderWindow *window)
+bool GraphNavEvent::check()
 {
     if(!is_enabled)
     {
-        body->paintDisabled();
-        check_result = false;
-        //left_hold = false;
+        event_result = false;
         center_hold = false;
         center_graph_flag = false;
-        return check_result;
+        return event_result;
     }
     sf::Vector2i pixelPos = getMousePos(window);
     sf::Vector2f worldPos = window->mapPixelToCoords(pixelPos);
     if(body->mouseHover(worldPos))
     {
-        if(isMouseKeyPressed(Mouse::Middle))
+        if(isMouseKeyPressed(Mouse::Right))
         {
             if(!center_hold)
             {
                 center_graph_flag = true;
                 center_hold = true;
             }
+            else
+            {
+                center_graph_flag = false;
+            }
         }
         else
         {
+            center_graph_flag = false;
             center_hold = false;
         }
-        if(Mouse::isButtonPressed(Mouse::Left))
+
+        if(isMouseKeyPressed(Mouse::Left))
         {
-            if(!check_result)
+            if(!event_result)
             {
-                body->paintHoverToggled();
                 prev_mouse_pos = worldPos;
-                check_result = true;
+                event_result = true;
             }
             else
             {
@@ -48,14 +51,13 @@ bool GraphNavEvent::check(UIElementBody *body, RenderWindow *window)
         }
         else
         {
-            body->paintHover();
-            check_result = false;
+            event_result = false;
         }
     }
     else
     {
-        body->paintResting();
-        check_result = false;
+        event_result = false;
+        center_graph_flag = false;
     }
-    return check_result;
+    return event_result;
 }
