@@ -373,6 +373,18 @@ double Calculator::getResult(std::map<std::string, double>& var_map)
     return getValue(var_map, RPNstring);
 }
 
+void Calculator::getResultRange(std::vector<double> &results, double start, double end, double step)
+{
+    std::map<std::string, double> x_range = {{"pi", 3.14159265},
+                                             {"e", 2.71828182},
+                                             {"x", 0}};
+    for(double x = start; x <= end; x += step)
+    {
+        x_range["x"] = x;
+        results.push_back(getResult(x_range));
+    }
+}
+
 Calculator::Calculator()
 {
     RPNstring = "";

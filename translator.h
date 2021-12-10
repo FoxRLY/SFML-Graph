@@ -1,6 +1,7 @@
 #pragma once
 #include <stack>
 #include <map>
+#include <vector>
 #include <string>
 
 class Calculator
@@ -13,4 +14,5 @@ public:
     Calculator();
     void setExpression(std::string& new_expression);
     double getResult(std::map<std::string, double>& var_map);
+    void getResultRange(std::vector<double>& results, double start, double end, double step);
 };

@@ -29,7 +29,7 @@ void drawGraphPlane(DrawingBody* drawing_body, int plane_size, int grid_size, Fo
             drawing_body->drawHorLine(Color::Black, i, 2);
             drawing_body->drawVertLine(Color::Black, i, 2);
         }
-        /*
+
         for(int k = 0; k < plane_size; k += grid_size)
         {
             Text number;
@@ -46,7 +46,7 @@ void drawGraphPlane(DrawingBody* drawing_body, int plane_size, int grid_size, Fo
             number.setOrigin(0, number.getGlobalBounds().height);
             drawing_body->drawText(number, Vector2f(k+3,i-3));
         }
-         */
+
     }
 
 
@@ -62,6 +62,10 @@ int main()
     // Шрифт для элементов
     Font mono;
     mono.loadFromFile("../assets/JetBrainsMono-Bold.ttf");
+
+
+    // Calculator
+    Calculator calculator;
 
 
     // Список элементов интерфейса
@@ -192,14 +196,17 @@ int main()
         // Цикл обработки событий элементов интерфейса
         UIElement::eventCheckLoop(event_list);
 
-        //
+        // Перемещение камеры
         auto* camera_box_event = (GraphNavEvent*)camera_box->getEvent();
         camera_box_body->setCameraPos(camera_box_body->getCameraPos() - camera_box_event->getMouseDelta());
 
-        if(((GraphNavEvent*)camera_box->getEvent())->getCenterGraphFlag())
+        // Центровка камеры
+        if(camera_box_event->getCenterGraphFlag())
         {
             camera_box_body->setCameraCenter(Vector2f(5000, 5000));
         }
+
+        // Кнопка "Отобразить графики"
         if(draw_button->getEventResult())
         {
             camera_box_body->setCameraCenter(Vector2f(5000, 5000));
