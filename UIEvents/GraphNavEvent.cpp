@@ -12,12 +12,14 @@ bool GraphNavEvent::check()
         event_result = false;
         center_hold = false;
         center_graph_flag = false;
+        hover = false;
         return event_result;
     }
     sf::Vector2i pixelPos = getMousePos(window);
     sf::Vector2f worldPos = window->mapPixelToCoords(pixelPos);
     if(body->mouseHover(worldPos))
     {
+        hover = true;
         if(isMouseKeyPressed(Mouse::Right))
         {
             if(!center_hold)
@@ -56,6 +58,7 @@ bool GraphNavEvent::check()
     }
     else
     {
+        hover = false;
         event_result = false;
         center_graph_flag = false;
     }

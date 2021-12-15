@@ -6,6 +6,7 @@ class GraphNavEvent : public UIEvent
 private:
     RenderWindow* window;
     UIElementBody* body;
+    bool hover;
     Vector2f prev_mouse_pos;
     Vector2f mouse_pos_delta;
     bool center_hold;
@@ -18,13 +19,20 @@ public:
         window = new_window;
         center_graph_flag = false;
         center_hold = false;
+        hover = false;
     }
     Vector2f getMouseDelta();
     bool getCenterGraphFlag()
     {
         return center_graph_flag;
     }
+    bool isHovering()
+    {
+        return hover;
+    }
 
     bool check() override;
 };
+
+
 

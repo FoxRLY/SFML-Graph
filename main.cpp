@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <iostream>
 #include "translator.h"
 #include "UIElements/UIConstructor.h"
 
@@ -20,7 +21,7 @@ int main()
     int plane_size = 10000;
     int grid_size = 200;
     std::vector<float> zoom = {0.25, 0.5, 1, 5, 10, 50, 100};
-    float current_zoom = zoom[2];
+    int current_zoom_index = 2;
 
 
     // Цвета графика
@@ -47,6 +48,7 @@ int main()
     UIElement* camera_box = UIConstructor::createCameraBox(&window);
     auto* camera_box_body = (CameraBody*)camera_box->getBody();
     camera_box_body->setDisplayRect(Vector2f(730, 90), Vector2f(890,890));
+    camera_box_body->setCameraCenter(Vector2f(plane_size/2, plane_size/2));
     event_list.push_back(camera_box);
 
 
@@ -57,7 +59,7 @@ int main()
     drawing_box_body->setFont(mono);
     drawing_box_body->setPlaneSize(plane_size);
     drawing_box_body->setGridSize(grid_size);
-    drawing_box_body->setGridRange(current_zoom);
+    drawing_box_body->setGridRange(zoom[current_zoom_index]);
     event_list.push_back(drawing_box);
 
 
@@ -198,43 +200,6 @@ int main()
             camera_box_body->setCameraCenter(Vector2f(plane_size/2, plane_size/2));
         }
 
-        // Изменение
-
-        // Кнопка "Отобразить графики"
-        if(draw_button->getEventResult())
-        {
-            range_1.clear();
-            calculator_1.setExpression(input_text_1.getString());
-            calculator_1.getResultRange(range_1, plane_size * (-current_zoom) / (grid_size * 2), plane_size * (current_zoom) / (grid_size * 2), current_zoom / 4);
-
-            range_2.clear();
-            calculator_2.setExpression(input_text_2.getString());
-            calculator_2.getResultRange(range_2, plane_size * (-current_zoom) / (grid_size * 2), plane_size * (current_zoom) / (grid_size * 2), current_zoom / 4);
-
-            range_3.clear();
-            calculator_3.setExpression(input_text_3.getString());
-            calculator_3.getResultRange(range_3, plane_size * (-current_zoom) / (grid_size * 2), plane_size * (current_zoom) / (grid_size * 2), current_zoom / 4);
-
-            camera_box_body->setCameraCenter(Vector2f(plane_size/2, plane_size/2));
-
-            drawing_box_body->clearDrawings();
-            drawing_box_body->drawGraphPlane();
-            if(input_text_1.getString() != "")
-            {
-                drawing_box_body->drawGraphFunc(range_1, graph_color_1);
-            }
-            if(input_text_2.getString() != "")
-            {
-                drawing_box_body->drawGraphFunc(range_2, graph_color_2);
-            }
-            if(input_text_3.getString() != "")
-            {
-                drawing_box_body->drawGraphFunc(range_3, graph_color_3);
-            }
-        }
-
-
-
         // Цикл обработки событий окна
         Event event;
         while(window.pollEvent(event))
@@ -244,6 +209,25 @@ int main()
                 case Event::Closed:
                 {
                     window.close();
+                    break;
+                }
+                case Event::MouseWheelScrolled:
+                {
+                    if(camera_box_event->isHovering())
+                    {
+                        draw_button->setEventResult(true);
+                        int delta = event.mouseWheelScroll.delta;
+                        current_zoom_index -= delta;
+                        if(current_zoom_index < 0)
+                        {
+                            current_zoom_index = 0;
+                        }
+                        else if(current_zoom_index >= zoom.size())
+                        {
+                            current_zoom_index = zoom.size()-1;
+                        }
+                        drawing_box_body->setGridRange(zoom[current_zoom_index]);
+                    }
                     break;
                 }
                 case Event::TextEntered:
@@ -260,6 +244,40 @@ int main()
                     }
                     break;
                 }
+            }
+        }
+
+
+        // Кнопка "Отобразить графики"
+        if(draw_button->getEventResult())
+        {
+            range_1.clear();
+            calculator_1.setExpression(input_text_1.getString());
+            calculator_1.getResultRange(range_1, plane_size * (-zoom[current_zoom_index]) / (grid_size * 2), plane_size * (zoom[current_zoom_index]) / (grid_size * 2), zoom[current_zoom_index] / 8);
+
+            range_2.clear();
+            calculator_2.setExpression(input_text_2.getString());
+            calculator_2.getResultRange(range_2, plane_size * (-zoom[current_zoom_index]) / (grid_size * 2), plane_size * (zoom[current_zoom_index]) / (grid_size * 2), zoom[current_zoom_index] / 8);
+
+            range_3.clear();
+            calculator_3.setExpression(input_text_3.getString());
+            calculator_3.getResultRange(range_3, plane_size * (-zoom[current_zoom_index]) / (grid_size * 2), plane_size * (zoom[current_zoom_index]) / (grid_size * 2), zoom[current_zoom_index] / 8);
+
+            //camera_box_body->setCameraCenter(Vector2f(plane_size/2, plane_size/2));
+
+            drawing_box_body->clearDrawings();
+            drawing_box_body->drawGraphPlane();
+            if(input_text_1.getString() != "")
+            {
+                drawing_box_body->drawGraphFunc(range_1, graph_color_1);
+            }
+            if(input_text_2.getString() != "")
+            {
+                drawing_box_body->drawGraphFunc(range_2, graph_color_2);
+            }
+            if(input_text_3.getString() != "")
+            {
+                drawing_box_body->drawGraphFunc(range_3, graph_color_3);
             }
         }
 
