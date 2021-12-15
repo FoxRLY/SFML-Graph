@@ -15,8 +15,9 @@ void TextPreset(Text& text, Font& font)
     text.setCharacterSize(40);
 }
 
-void drawGraphPlane(DrawingBody* drawing_body, int plane_size, int grid_size, Font& font)
+void drawGraphPlane(DrawingBody* drawing_body, int plane_size, int grid_size, float grid_range, Font& font)
 {
+    float grid_aspect = grid_size / grid_range;
     for(int i = 0; i < plane_size; i += grid_size)
     {
         if(plane_size / 2.0 == (float)i)
@@ -35,8 +36,28 @@ void drawGraphPlane(DrawingBody* drawing_body, int plane_size, int grid_size, Fo
             Text number;
             TextPreset(number, font);
             number.setCharacterSize(12);
-            std::string y_number = std::to_string(-(i - plane_size/2));
-            std::string x_number = std::to_string(k - plane_size/2);
+            std::string y_number = std::to_string(-(i - plane_size/2) / grid_aspect);
+            std::string x_number = std::to_string((k - plane_size/2) / grid_aspect);
+            for(int z = 0; z < y_number.length(); z++)
+            {
+                if(y_number[z] == '.')
+                {
+                    while(y_number.length() > z+3)
+                    {
+                        y_number.pop_back();
+                    }
+                }
+            }
+            for(int z = 0; z < x_number.length(); z++)
+            {
+                if(x_number[z] == '.')
+                {
+                    while(x_number.length() > z+3)
+                    {
+                        x_number.pop_back();
+                    }
+                }
+            }
 
             number.setString(x_number);
             number.setOrigin(number.getGlobalBounds().width, 0);
@@ -46,10 +67,15 @@ void drawGraphPlane(DrawingBody* drawing_body, int plane_size, int grid_size, Fo
             number.setOrigin(0, number.getGlobalBounds().height);
             drawing_body->drawText(number, Vector2f(k+3,i-3));
         }
-
     }
+}
 
-
+void drawGraph(DrawingBody* drawing_body, int plane_size, int grid_size, Color color, std::vector<double>& results)
+{
+    for(int i = 0; i < plane_size/grid_size - 1; i++)
+    {
+        drawing_body->drawLine(color, Vector2f(i*grid_size, results[i]), Vector2f(i*grid_size, results[i+1]), 8);
+    }
 }
 
 int main()
@@ -62,10 +88,6 @@ int main()
     // Шрифт для элементов
     Font mono;
     mono.loadFromFile("../assets/JetBrainsMono-Bold.ttf");
-
-
-    // Calculator
-    Calculator calculator;
 
 
     // Список элементов интерфейса
@@ -186,8 +208,13 @@ int main()
     input_text_3.setPosition(30, 496);
 
 
-    // Калькулятор вводимых функций
-    Calculator calculator;
+    // Калькуляторы вводимых функций
+    Calculator calculator_1, calculator_2, calculator_3;
+    std::vector<float> zoom = {0.25, 0.5, 1, 5, 10, 50, 100};
+
+    float current_zoom = zoom[2];
+
+    std::vector<double> range_1, range_2, range_3;
 
 
     // Цикл приложения
@@ -209,9 +236,28 @@ int main()
         // Кнопка "Отобразить графики"
         if(draw_button->getEventResult())
         {
+            if(calculator_1.getExpression() != input_text_1.getString())
+            {
+                range_1.clear();
+                calculator_1.setExpression(input_text_1.getString());
+                calculator_1.getResultRange(range_1, 10000 * (-current_zoom) / (200 * 2), 10000 * (current_zoom) / (200 * 2), current_zoom);
+            }
+            if(calculator_2.getExpression() != input_text_2.getString())
+            {
+                range_2.clear();
+                calculator_2.setExpression(input_text_2.getString());
+                calculator_2.getResultRange(range_2, 10000 * (-current_zoom) / (200 * 2), 10000 * (current_zoom) / (200 * 2), current_zoom);
+            }
+            if(calculator_3.getExpression() != input_text_3.getString())
+            {
+                range_3.clear();
+                calculator_3.setExpression(input_text_3.getString());
+                calculator_3.getResultRange(range_3, 10000 * (-current_zoom) / (200 * 2), 10000 * (current_zoom) / (200 * 2), current_zoom);
+            }
             camera_box_body->setCameraCenter(Vector2f(5000, 5000));
             drawing_box_body->clearDrawings();
-            drawGraphPlane(drawing_box_body, 10000, 200, mono);
+            drawGraphPlane(drawing_box_body, 10000, 200, current_zoom, mono);
+            drawGraph(drawing_box_body, 10000, 200, Color::Red, range_1);
         }
 
 

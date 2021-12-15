@@ -358,9 +358,15 @@ std::string Calculator::RPN(std::string str)
 }
 */
 
-void Calculator::setExpression(std::string& new_expression)
+void Calculator::setExpression(const std::string& new_expression)
 {
+    expression = new_expression;
     RPNstring = RPN(new_expression);
+}
+
+std::string& Calculator::getExpression()
+{
+    return expression;
 }
 
 double Calculator::getResult(std::map<std::string, double>& var_map)
@@ -388,6 +394,7 @@ void Calculator::getResultRange(std::vector<double> &results, double start, doub
 Calculator::Calculator()
 {
     RPNstring = "";
+    expression = "";
 }
 
 /*
