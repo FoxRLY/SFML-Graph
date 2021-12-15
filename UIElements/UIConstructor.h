@@ -3,6 +3,7 @@
 #include "../UIBodies/RectShapeBody.h"
 #include "../UIBodies/DrawingBody.h"
 #include "../UIBodies/CameraBody.h"
+#include "../UIBodies/GraphDrawingBody.h"
 #include "../UIEvents/ButtonEvent.h"
 #include "../UIEvents/InputTextBoxEvent.h"
 #include "../UIEvents/GraphNavEvent.h"
@@ -16,5 +17,6 @@ public:
     static UIElement* createRectShapeCheckBox(RenderWindow* window);
     static UIElement* createRectShapeInputTextBox(RenderWindow* window);
     static UIElement* createDrawingBox(RenderWindow* window);
+    static UIElement* createGraphDrawingBox(RenderWindow* window);
     static UIElement* createCameraBox(RenderWindow* window);
 };

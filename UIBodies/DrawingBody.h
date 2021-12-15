@@ -5,7 +5,7 @@
 
 class DrawingBody : public UIElementBody
 {
-private:
+protected:
     std::vector<Drawable*> draw_queue;
     FloatRect shape;
 public:

@@ -42,3 +42,11 @@ UIElement* UIConstructor::createCameraBox(RenderWindow *window)
     auto camera_box = new UIElement(body, event);
     return camera_box;
 }
+
+UIElement* UIConstructor::createGraphDrawingBox(RenderWindow *window)
+{
+    auto* body = new GraphDrawingBody(window);
+    auto* event = new DefaultEvent();
+    auto* graph_drawing_box = new UIElement(body, event);
+    return graph_drawing_box;
+}

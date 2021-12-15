@@ -18,6 +18,6 @@ add_executable(SFML_Practice main.cpp
 
         UIEvents/ButtonEvent.cpp UIEvents/ButtonEvent.h UIEvents/InputTextBoxEvent.cpp UIEvents/InputTextBoxEvent.h
         UIEvents/GraphNavEvent.cpp UIEvents/GraphNavEvent.h  UIEvents/DefaultEvent.cpp UIEvents/DefaultEvent.h
-        UIEvents/UIEvent.cpp UIEvents/UIEvent.h)
+        UIEvents/UIEvent.cpp UIEvents/UIEvent.h UIBodies/GraphDrawingBody.cpp UIBodies/GraphDrawingBody.h)
 
 target_link_libraries(SFML_Practice sfml-graphics sfml-audio sfml-window sfml-system)

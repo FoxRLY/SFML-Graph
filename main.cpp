@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <iostream>
 #include "translator.h"
 #include "UIElements/UIConstructor.h"
 
@@ -15,71 +14,21 @@ void TextPreset(Text& text, Font& font)
     text.setCharacterSize(40);
 }
 
-void drawGraphPlane(DrawingBody* drawing_body, int plane_size, int grid_size, float grid_range, Font& font)
-{
-    float grid_aspect = grid_size / grid_range;
-    for(int i = 0; i < plane_size; i += grid_size)
-    {
-        if(plane_size / 2.0 == (float)i)
-        {
-            drawing_body->drawHorLine(Color::Green, i, 3);
-            drawing_body->drawVertLine(Color::Red, i, 3);
-        }
-        else
-        {
-            drawing_body->drawHorLine(Color::Black, i, 2);
-            drawing_body->drawVertLine(Color::Black, i, 2);
-        }
-
-        for(int k = 0; k < plane_size; k += grid_size)
-        {
-            Text number;
-            TextPreset(number, font);
-            number.setCharacterSize(12);
-            std::string y_number = std::to_string(-(i - plane_size/2) / grid_aspect);
-            std::string x_number = std::to_string((k - plane_size/2) / grid_aspect);
-            for(int z = 0; z < y_number.length(); z++)
-            {
-                if(y_number[z] == '.')
-                {
-                    while(y_number.length() > z+3)
-                    {
-                        y_number.pop_back();
-                    }
-                }
-            }
-            for(int z = 0; z < x_number.length(); z++)
-            {
-                if(x_number[z] == '.')
-                {
-                    while(x_number.length() > z+3)
-                    {
-                        x_number.pop_back();
-                    }
-                }
-            }
-
-            number.setString(x_number);
-            number.setOrigin(number.getGlobalBounds().width, 0);
-            drawing_body->drawText(number, Vector2f(k-3, i+3));
-
-            number.setString(y_number);
-            number.setOrigin(0, number.getGlobalBounds().height);
-            drawing_body->drawText(number, Vector2f(k+3,i-3));
-        }
-    }
-}
-
-void drawGraph(DrawingBody* drawing_body, int plane_size, int grid_size, Color color, std::vector<double>& results)
-{
-    for(int i = 0; i < plane_size/grid_size - 1; i++)
-    {
-        drawing_body->drawLine(color, Vector2f(i*grid_size, results[i]), Vector2f(i*grid_size, results[i+1]), 8);
-    }
-}
-
 int main()
 {
+    // Размеры графика
+    int plane_size = 10000;
+    int grid_size = 200;
+    std::vector<float> zoom = {0.25, 0.5, 1, 5, 10, 50, 100};
+    float current_zoom = zoom[2];
+
+
+    // Цвета графика
+    Color graph_color_1(180, 96, 124);
+    Color graph_color_2(67, 167, 254);
+    Color graph_color_3(1, 122, 124);
+
+
     // Окно приложения
     RenderWindow window(VideoMode( 1640, 1080 ), L"Рисование графиков");
     window.setVerticalSyncEnabled(true);
@@ -102,9 +51,13 @@ int main()
 
 
     // Окно рисования
-    UIElement* drawing_box = UIConstructor::createDrawingBox(&window);
-    auto* drawing_box_body = (DrawingBody*)drawing_box->getBody();
-    drawing_box_body->transform(Vector2f(0,0), Vector2f(10000, 10000));
+    UIElement* drawing_box = UIConstructor::createGraphDrawingBox(&window);
+    auto* drawing_box_body = (GraphDrawingBody*)drawing_box->getBody();
+    drawing_box_body->transform(Vector2f(0,0), Vector2f(plane_size, plane_size));
+    drawing_box_body->setFont(mono);
+    drawing_box_body->setPlaneSize(plane_size);
+    drawing_box_body->setGridSize(grid_size);
+    drawing_box_body->setGridRange(current_zoom);
     event_list.push_back(drawing_box);
 
 
@@ -167,6 +120,11 @@ int main()
     RectShapeBodyPreset(input_box_1_body);
     input_box_1_body->transform(Vector2f(30, 100), Vector2f(600, 42));
 
+    CircleShape input_box_coloring_1;
+    input_box_coloring_1.setRadius(5);
+    input_box_coloring_1.setPosition(630+10, 142+2);
+    input_box_coloring_1.setFillColor(graph_color_1);
+
 
     // Создание и форматирование строки ввода 1
     Text input_text_1;
@@ -183,6 +141,11 @@ int main()
     auto* input_box_2_body = (RectShapeBody*)input_box_2->getBody();
     RectShapeBodyPreset(input_box_2_body);
     input_box_2_body->transform(Vector2f(30, 300), Vector2f(600, 42));
+
+    CircleShape input_box_coloring_2;
+    input_box_coloring_2.setRadius(5);
+    input_box_coloring_2.setPosition(630+10, 342+2);
+    input_box_coloring_2.setFillColor(graph_color_2);
 
 
     // Создание и форматирование строки ввода 2
@@ -201,6 +164,11 @@ int main()
     RectShapeBodyPreset(input_box_3_body);
     input_box_3_body->transform(Vector2f(30, 500), Vector2f(600, 42));
 
+    CircleShape input_box_coloring_3;
+    input_box_coloring_3.setRadius(5);
+    input_box_coloring_3.setPosition(630+10, 542+2);
+    input_box_coloring_3.setFillColor(graph_color_3);
+
 
     // Создание и форматирование строки ввода 3
     Text input_text_3;
@@ -210,9 +178,6 @@ int main()
 
     // Калькуляторы вводимых функций
     Calculator calculator_1, calculator_2, calculator_3;
-    std::vector<float> zoom = {0.25, 0.5, 1, 5, 10, 50, 100};
-
-    float current_zoom = zoom[2];
 
     std::vector<double> range_1, range_2, range_3;
 
@@ -230,35 +195,44 @@ int main()
         // Центровка камеры
         if(camera_box_event->getCenterGraphFlag())
         {
-            camera_box_body->setCameraCenter(Vector2f(5000, 5000));
+            camera_box_body->setCameraCenter(Vector2f(plane_size/2, plane_size/2));
         }
+
+        // Изменение
 
         // Кнопка "Отобразить графики"
         if(draw_button->getEventResult())
         {
-            if(calculator_1.getExpression() != input_text_1.getString())
-            {
-                range_1.clear();
-                calculator_1.setExpression(input_text_1.getString());
-                calculator_1.getResultRange(range_1, 10000 * (-current_zoom) / (200 * 2), 10000 * (current_zoom) / (200 * 2), current_zoom);
-            }
-            if(calculator_2.getExpression() != input_text_2.getString())
-            {
-                range_2.clear();
-                calculator_2.setExpression(input_text_2.getString());
-                calculator_2.getResultRange(range_2, 10000 * (-current_zoom) / (200 * 2), 10000 * (current_zoom) / (200 * 2), current_zoom);
-            }
-            if(calculator_3.getExpression() != input_text_3.getString())
-            {
-                range_3.clear();
-                calculator_3.setExpression(input_text_3.getString());
-                calculator_3.getResultRange(range_3, 10000 * (-current_zoom) / (200 * 2), 10000 * (current_zoom) / (200 * 2), current_zoom);
-            }
-            camera_box_body->setCameraCenter(Vector2f(5000, 5000));
+            range_1.clear();
+            calculator_1.setExpression(input_text_1.getString());
+            calculator_1.getResultRange(range_1, plane_size * (-current_zoom) / (grid_size * 2), plane_size * (current_zoom) / (grid_size * 2), current_zoom / 4);
+
+            range_2.clear();
+            calculator_2.setExpression(input_text_2.getString());
+            calculator_2.getResultRange(range_2, plane_size * (-current_zoom) / (grid_size * 2), plane_size * (current_zoom) / (grid_size * 2), current_zoom / 4);
+
+            range_3.clear();
+            calculator_3.setExpression(input_text_3.getString());
+            calculator_3.getResultRange(range_3, plane_size * (-current_zoom) / (grid_size * 2), plane_size * (current_zoom) / (grid_size * 2), current_zoom / 4);
+
+            camera_box_body->setCameraCenter(Vector2f(plane_size/2, plane_size/2));
+
             drawing_box_body->clearDrawings();
-            drawGraphPlane(drawing_box_body, 10000, 200, current_zoom, mono);
-            drawGraph(drawing_box_body, 10000, 200, Color::Red, range_1);
+            drawing_box_body->drawGraphPlane();
+            if(input_text_1.getString() != "")
+            {
+                drawing_box_body->drawGraphFunc(range_1, graph_color_1);
+            }
+            if(input_text_2.getString() != "")
+            {
+                drawing_box_body->drawGraphFunc(range_2, graph_color_2);
+            }
+            if(input_text_3.getString() != "")
+            {
+                drawing_box_body->drawGraphFunc(range_3, graph_color_3);
+            }
         }
+
 
 
         // Цикл обработки событий окна
@@ -311,6 +285,9 @@ int main()
         window.draw(input_box_3_label);
         window.draw(draw_button_label);
         window.draw(clear_button_label);
+        window.draw(input_box_coloring_1);
+        window.draw(input_box_coloring_2);
+        window.draw(input_box_coloring_3);
 
 
         // Вывод изображения
