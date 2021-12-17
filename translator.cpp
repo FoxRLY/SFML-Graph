@@ -14,6 +14,7 @@ double Calculator::getValue(std::map<std::string, double>& var_map, std::string&
     std::stack<double> value_stack;
 
     std::map<std::string, size_t> map; // карта весов операций
+    map.insert({"!", 3});
     map.insert({"cot", 4});
     map.insert({"tan", 4});
     map.insert({"cos", 4});
@@ -23,12 +24,6 @@ double Calculator::getValue(std::map<std::string, double>& var_map, std::string&
     map.insert({"/", 3});
     map.insert({"+", 2});
     map.insert({"-", 2});
-    std::stringstream test_stream(str);
-    while(!test_stream.eof())
-    {
-        std::string buffer;
-        test_stream >> buffer;
-    }
     std::stringstream str_stream(str);
     while(!str_stream.eof())
     {
@@ -97,6 +92,7 @@ double Calculator::getValue(std::map<std::string, double>& var_map, std::string&
                 value_stack.pop();
                 double a = value_stack.top();
                 value_stack.pop();
+
                 value_stack.push(std::pow(a,b));
             }
             else if(buffer == "sin")
@@ -123,6 +119,12 @@ double Calculator::getValue(std::map<std::string, double>& var_map, std::string&
                 value_stack.pop();
                 value_stack.push(1.0/tan(a));
             }
+            else if(buffer == "!")
+            {
+                double a = value_stack.top();
+                value_stack.pop();
+                value_stack.push(-a);
+            }
         }
     }
     return value_stack.top();
@@ -142,6 +144,7 @@ std::string Calculator::RPN(std::string str)
 
 
     std::map<std::string, size_t> map; // карта весов операций
+    map.insert({"!", 3});
     map.insert({"cot", 4});
     map.insert({"tan", 4});
     map.insert({"cos", 4});
@@ -208,6 +211,7 @@ void Calculator::setExpression(const std::string& new_expression)
 {
     expression = new_expression;
     RPNstring = RPN(new_expression);
+    std::cout << RPNstring << std::endl;
 }
 
 std::string& Calculator::getExpression()

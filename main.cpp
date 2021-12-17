@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <iostream>
 #include "translator.h"
 #include "UIElements/UIConstructor.h"
 
@@ -284,6 +283,7 @@ int main()
 
         // Цикл отрисовки
         window.clear(Color::White);
+
 
         camera_box_body->applyView();
         drawing_box->draw();
