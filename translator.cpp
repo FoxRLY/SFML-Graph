@@ -211,7 +211,6 @@ void Calculator::setExpression(const std::string& new_expression)
 {
     expression = new_expression;
     RPNstring = RPN(new_expression);
-    std::cout << RPNstring << std::endl;
 }
 
 std::string& Calculator::getExpression()

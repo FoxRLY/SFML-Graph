@@ -29,8 +29,11 @@ int main()
     Color graph_color_3(1, 122, 124);
 
 
+    ContextSettings settings;
+    settings.antialiasingLevel = 8.0;
+
     // Окно приложения
-    RenderWindow window(VideoMode( 1640, 1080 ), L"Рисование графиков");
+    RenderWindow window(VideoMode( 1640, 1080 ), L"Рисование графиков", Style::Default, settings);
     window.setVerticalSyncEnabled(true);
 
 
@@ -246,6 +249,16 @@ int main()
             }
         }
 
+        // Кнопка "Очистить поле"
+        if(clear_button->getEventResult())
+        {
+            range_1.clear();
+            range_2.clear();
+            range_3.clear();
+            camera_box_body->setCameraCenter(Vector2f(plane_size/2, plane_size/2));
+            drawing_box_body->clearDrawings();
+            drawing_box_body->drawGraphPlane();
+        }
 
         // Кнопка "Отобразить графики"
         if(draw_button->getEventResult())
