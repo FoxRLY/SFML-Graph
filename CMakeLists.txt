@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.17)
 
 project(SFML_Practice)
-
+set(CMAKE_BUILD_TYPE Release)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    message("Windows build")
+    set(CMAKE_CXX_FLAGS_RELEASE "-mwindows")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+endif()
 set(CMAKE_CXX_STANDARD 17)
 
 set(SFML_DIR "c:/SFML/lib/cmake/SFML")
